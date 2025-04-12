@@ -18,19 +18,17 @@ export default async function run(
 ) {
   const coverImgDir = `src/assets/jackets`;
 
-  /*
   console.info(`Fetching data from: ${dataUrl} ...`);
   const response = await fetch(dataUrl);
-  const data: Record<string, any> = await response.json();
-  // Transform song data into object
-  const arcadeSongs = data.songs.reduce(
-    (acc: any, song: { [x: string]: any }) => ({
-      ...acc,
-      [song['title']]: { artist: song['artist'], imageName: song['imageName'] },
-    }),
-    {}
+  const data: Array<Record<string, string>> = await response.json();
+  
+  const songJacketFileNames: Record<string, string> = data.reduce(
+    (accum, songEntry) => {
+      accum[songEntry.id] = songEntry.image;
+      return accum;
+    }, {}
   );
-  */
+  console.info(JSON.stringify(songJacketFileNames));
 
   console.info('* Downloading cover image for songs ...');
   for (const [index, song] of songs.entries()) {
@@ -44,7 +42,8 @@ export default async function run(
         continue;
       }
       */
-      const imageUrl = `${baseUrl}${jacketName}`;
+      const imageUrl = `${baseUrl}${songJacketFileNames[song.id]}`;
+	  console.info(imageUrl);
 
       requestQueue
         .add(() =>
