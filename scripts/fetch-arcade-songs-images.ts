@@ -32,7 +32,9 @@ export default async function run(
 
   console.info('* Downloading cover image for songs ...');
   for (const [index, song] of songs.entries()) {
-    const jacketName = song.jacket.split('/')[1];
+	const songId = song.id;
+	if (songId == null) continue;
+    const jacketName = songJacketFileNames[songId];
     if (song.jacket && !fs.existsSync(`${coverImgDir}/${song.jacket}`)) {
       console.info(`(${1 + index} / ${songs.length}) ${song.name}`);
       /*
@@ -42,7 +44,7 @@ export default async function run(
         continue;
       }
       */
-      const imageUrl = `${baseUrl}${songJacketFileNames[song.id]}`;
+      const imageUrl = `${baseUrl}${jacketName}`;
 	  console.info(imageUrl);
 
       requestQueue
